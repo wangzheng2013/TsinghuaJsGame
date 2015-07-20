@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>星之传说</title>
+    <script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
+    <style>
+        body{
+            background-image: url(img/htmlbackground.jpg);/*xingkong 整个大背景*/
+        }
+
+        #G_window{
+            position:absolute;
+            left:300px;
+            top:100px;
+            width:800px;
+            height:500px;
+            /*background-image: url(img/black.jpg);*/
+            background-color: #000000;
+        }
+
+        #G_status{
+            position: absolute;
+            left:50px;
+            top:50px;
+            width:180px;
+            height:400px;
+            background-color: azure;
+        }
+
+        #G_map{
+            position: absolute;
+            left:250px;
+            top:50px;
+            width:500px;
+            height:400px;
+            background-color: beige;
+        }
+
+        .S_block{
+            position: relative;
+            float:left;
+            width:180px;
+            height:50px;
+
+            margin-left: 10px;
+            margin-top: 10px;
+            padding-left: 5px;
+        }
+
+        .CS_block{
+            position: relative;
+            float:left;
+            width:90px;
+            height:40px;
+        }
+
+        .Ckey_block{
+            position: relative;
+            float:left;
+            width:180px;
+            height:40px;
+        }
+
+        .road{
+            position: absolute;
+            width:50px;
+            height:50px;
+            /*background-color:#bbbbbb;*/
+            background-image: url(img/road.jpg);
+            border: 2px solid;
+        }
+        .block{
+            position: absolute;
+            width:50px;
+            height:50px;
+            /*background-color:#212422;*/
+            background-image: url(img/block.jpg);
+            border: 2px solid;
+        }
+
+        #figure{
+            position: absolute;
+            width:50px;
+            height:50px;
+            z-index: 2;
+        }
+        .monster{
+            position: absolute;
+            width:50px;
+            height:50px;
+            z-index: 1;
+        }
+        .item{
+            position: absolute;
+            width:50px;
+            height:50px;
+            z-index: 1;
+        }
+        .door{
+            position: absolute;
+            width:50px;
+            height:50px;
+            z-index: 1;
+        }
+
+    </style>
+</head>
+<body>
+
+</body>
+<script>
+    var G_username = '李逍遥';
+	var M_WIDTH = 10;
+	var M_HEIGHT = 8;
+	//以下只是expamle
+    var m_Figure = new Object();
+    m_Figure.blood = 1000;
+    m_Figure.attack = 100;
+    m_Figure.armor = 100;
+    m_Figure.agility = 50;
+    m_Figure.dodge = '20%';
+    m_Figure.recover = 100;
+    m_Figure.gold = 100;
+    m_Figure.exp = 100;
+
+
+    m_Figure.redkey = 1;
+    m_Figure.bluekey = 1;
+    m_Figure.greenkey = 1;
+    m_Figure.x = 1;
+    m_Figure.y = 2;
+	//map
+	var m_Map = new Array();
+	for(var i=0;i<M_WIDTH;i++)
+	{	
+		m_Map[i] = new Array();
+		for(var j=0;j<M_HEIGHT;j++)
+		{
+			m_Map[i][j] = 0;
+		}
+	}
+
+    m_Map[3][5] = 1;
+    m_Map[6][1] = 1;
+
+
+
+    var G_window = BuildGameWindow();
+    var G_status = BuildGameStuats();
+    var G_map = BuildGameMap();
+    Game_Start();
+    //G == global
+    //ui face
+
+    function Game_Start()
+    {
+        PaintStatus();
+        PaintMap();
+    }
+    function BuildGameWindow()
+    {
+        var d = $('<div></div>>');
+        d.attr('id','G_window');
+
+        $('body').append(d);
+        return d;
+    }
+    function BuildGameStuats()
+    {
+        var d = $('<div></div>>');
+        d.attr('id','G_status');
+
+        $('#G_window').append(d);
+        return d;
+    }
+    function BuildGameMap()
+    {
+        var d = $('<div></div>>');
+        d.attr('id','G_map');
+
+        $('#G_window').append(d);
+        return d;
+    }
+
+    function PaintStatus()
+    {
+        G_status.empty();
+        PaintHead();
+        PaintData();
+        //event
+        document.addEventListener('keydown',Move);
+    }
+
+    function PaintHead()
+    {
+        var head = $('<div>头像：</div>');
+        var headpic = $('<img>');
+        headpic.attr({'src':'img/head.png','width':'50px','height':'50px'});
+        head.append(headpic);
+        head.attr({'id':'S_head','class':'S_block'});
+
+        var name = $('<div>姓名：' + G_username + '</div>');
+        name.attr({'id':'S_name','class':'S_block'});
+
+        G_status.append(head);
+        G_status.append(name);
+    }
+
+    function PaintData()
+    {
+
+        var blood = get_Cdiv('blood', '血量');
+        var attack = get_Cdiv('attack', '攻击');
+        var armor = get_Cdiv('armor', '防御');
+        var agility  =  get_Cdiv('agility', '敏捷');
+        var dodge =  get_Cdiv('dodge', '闪避');
+        var recover =  get_Cdiv('recover', '恢复');
+        var gold = get_Cdiv('gold','金币');
+        var exp = get_Cdiv('exp','经验');
+
+        var redkey = get_keydiv('redkey');
+        var bluekey = get_keydiv('bluekey');
+        var greenkey = get_keydiv('greenkey');
+    }
+
+    function get_Cdiv(id, name)
+    {
+        var d = $('<div>'+ name + '：' + m_Figure[id] + '</div>');
+        d.attr({'id':'CS_' + id,'class':'CS_block'});
+        G_status.append(d);
+        return d;
+    }
+    function get_keydiv(name)
+    {
+        var d = $('<div></div>');
+        var img = $('<img>');
+        img.attr({'src':'img/'+name+'.png','width':'28px','height':'25px'});
+        d.append(img);
+        d.append('X' + m_Figure[name]);
+        d.attr({'id':'CS_' + name,'class':'Ckey_block', 'align':'center'});
+        G_status.append(d);
+        return d;
+    }
+
+    function PaintMap()
+    {
+        //..paint map.
+		for(var i=0;i<M_WIDTH;i++)	
+			for(var j=0;j<M_HEIGHT;j++)
+			{
+				if(m_Map[i][j])
+				{
+					DrawBlock(i,j);
+				}
+				else
+				{
+					DrawRoad(i,j);
+				}
+			}
+			
+
+        PaintItem(4,4,0);
+        PaintDoor(0,0,0);
+        PaintMonster(2,2,2);
+        PaintFigure(1,2,0);
+    }
+
+    function PaintItem(x,y,t)
+    {
+        //paint..
+        var d = $('<div></div>');
+        var img = $('<img>');
+        img.attr({'src':'img/item/' + t + '.png','width':'50px','height':'50px'});
+        d.attr({'class':'item'});
+        var lx = 50 * x;
+        var ly = 50 * y;
+        d.css('left',lx);
+        d.css('top',ly);
+        d.append(img);
+        $('#G_map').append(d);
+    }
+
+    function PaintDoor(x,y,t)
+    {
+        var d = $('<div></div>');
+        var img = $('<img>');
+        img.attr({'src':'img/door/' + t + '.png','width':'50px','height':'50px'});
+        d.attr({'class':'door'});
+        var lx = 50 * x;
+        var ly = 50 * y;
+        d.css('left',lx);
+        d.css('top',ly);
+        d.append(img);
+        $('#G_map').append(d);
+    }
+
+    function PaintMonster(x,y,t)
+    {
+        //paint guai
+        var d = $('<div></div>');
+        var img = $('<img>');
+        img.attr({'src':'img/monster/' + t + '.png','width':'40px','height':'55px'});
+        d.attr({'class':'monster'});
+        var lx = 50 * x + 10;
+        var ly = 50 * y - 15;
+        d.css('left',lx);
+        d.css('top',ly);
+        d.append(img);
+        $('#G_map').append(d);
+    }
+
+    function PaintFigure(x,y,d)
+    {
+        $('#figure').remove();
+        //paint ren
+        var f = $('<div></div>');
+        var img = $('<img>');
+        img.attr({'src':'img/' + d + '.png','width':'40px','height':'65px'});
+        f.attr({'id':'figure'});
+        var lx = 50 * x;
+        var ly = 50 * y -25;
+        f.css('left',lx);
+        f.css('top',ly);
+        f.append(img);
+        $('#G_map').append(f);
+    }
+	function DrawBlock(i,j)
+	{
+        var d = $('<div></div>');
+        d.attr({'class':'block'});
+        var lx = 50 * i ;
+        var ly = 50 * j ;
+        d.css('left',lx);
+        d.css('top',ly);
+        $('#G_map').append(d);
+    }
+	function DrawRoad(i,j){
+        var d = $('<div></div>');
+        d.attr({'class':'road'});
+        var lx = 50 * i ;
+        var ly = 50 * j ;
+        d.css('left',lx);
+        d.css('top',ly);
+        $('#G_map').append(d);
+	}
+
+    function Move(evt)
+    {
+        var d;
+        if(evt.keyCode == 39)
+        {
+            d = 2;
+            if(Validate(m_Figure.x+1,m_Figure.y))
+                m_Figure.x++;
+        }
+        else if(evt.keyCode == 38)
+        {
+            d = 1;
+            if(Validate(m_Figure.x,m_Figure.y-1))
+                m_Figure.y--;
+        }
+        else if(evt.keyCode == 37)
+        {
+            d = 0;
+            if(Validate(m_Figure.x-1,m_Figure.y))
+                m_Figure.x--;
+        }
+        else if(evt.keyCode == 40)
+        {
+            d = 3;
+            if(Validate(m_Figure.x,m_Figure.y+1))
+                m_Figure.y++;
+        }
+
+        document.removeEventListener('keydown',Move);
+        //if(Fight)
+        //if(item)
+        //if(door)
+        Get();
+        //PaintMap();
+        PaintFigure(m_Figure.x,m_Figure.y,d);
+
+        document.addEventListener('keydown',Move);
+    }
+
+    function Validate(x,y){
+        if(x >= M_WIDTH || x < 0)
+            return 0;
+        if(y >= M_HEIGHT || y < 0)
+            return 0;
+        if(m_Map[x][y] == 1)
+            return 0;
+        return 1;
+    }
+
+    function Fight(monster)
+    {
+        //get monster type
+
+        //fighting
+        var times = m_Figure.attack - monster.armor;
+        times = floor(times);
+        var lose = times * (monster.attack - m_Figure.armor);
+        if(lose < 0)
+            lose = 0;
+
+        //refresh data
+        PaintStatus();
+    }
+
+
+    function Get()
+    {
+        m_Figure.attack++;
+        PaintStatus();
+    }
+
+    function jump()
+    {
+        // change map;
+    }
+
+    /*var Whole_Floor = [
+            [
+                    [1,1,1,1],
+                    [0,1,0,1],
+                    [1,2,3,1]
+            ]
+    ] */
+</script>
+</html>
