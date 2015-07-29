@@ -1,0 +1,49 @@
+﻿<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="style/bootstrap-3.3.5-dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="style/bootstrap-3.3.5-dist/css/font-awesome.min.css" />
+    <style>
+        #Messagediv{
+            position: absolute;
+            left: 40%;
+            top: 40%;
+        }
+    </style>
+</head>
+<body>
+    <div id="userlist">
+        <div id="Messagediv">
+            <div>
+                <h3 class="word">please log in..</h3>
+            </div>
+            <div class="input-prepend">
+                <span class="add-on"><i class="icon-pencil"></i></span>
+                <input type="text" id="nameInput" placeholder="your name..."><br/><br/>
+            </div>
+            <div class="input-prepend">
+                <span class="add-on"><i class="icon-circle-blank"></i></span>
+                <input type="text" id="passwordInput" placeholder="your password..."><br/><br/>
+            </div>
+            <button type="button"  class="btn btn-info" onclick="logIn()">log&nbsp;in&nbsp;&nbsp;<span class="add-on"><i class="icon-double-angle-right"></i></span></button>
+            <button type="button"  class="btn btn-info" onclick="signIn()">register&nbsp;&nbsp;<span class="add-on"><i class="icon-double-angle-right"></i></span></button>
+        </div>
+    </div>
+</body>
+<script>
+    /*
+    {% for user in users %}
+    <p>{{user.name}}</p>
+    <p>{{user.password}}</p>
+    <p>{{user.email}}</p>
+    {% endfor %}*/
+    function logIn(){
+        setTimeout("javascript:location.href='html/home.html'", 100);
+    }
+    function signIn(){
+        setTimeout("javascript:location.href='html/register.html'", 100);
+    }
+</script>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../style/bootstrap-3.3.5-dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="../style/bootstrap-3.3.5-dist/css/font-awesome.min.css" />
+    <script type="text/javascript" src="../js/jquery-1.11.3.min.js"></script>
+    <style>
+        #main{
+            margin-top:50px;
+        }
+    </style>
+</head>
+<body>
+<div align="center" id='main'>
+    <div class="input-prepend">
+        <span class="add-on"><i class="icon-pencil"></i></span>
+        <input type="text" id="nameInput" placeholder="your name..."><br/><br/>
+    </div>
+    <div class="input-prepend">
+        <span class="add-on"><i class="icon-circle-blank"></i></span>
+        <input type="text" id="passwordInput" placeholder="your password..."><br/><br/>
+    </div>
+    <div class="input-prepend">
+        <span class="add-on"><i class="icon-circle-blank"></i></span>
+        <input type="text" id="passwordInput2" placeholder="password again"><br/><br/>
+    </div>
+    <div class="input-prepend">
+        <span class="add-on"><i class="icon-envelope"></i></span>
+        <input type="text" id="emailInput" placeholder="your e-mail.."><br/><br/>
+    </div>
+    <button type="button"  class="btn btn-info" onclick="Register()">register&nbsp;&nbsp;<span class="add-on"><i class="icon-double-angle-right"></i></span></button>
+</div>
+</body>
+<script>
+    function Register(){
+        var name = $('#nameInput');
+        var password = $('#passwordInput');
+        var password2 = $('#passwordInput2');
+        var email = $('#emailInput');
+        $('#main').remove();
+        var d = $('<div></div>');
+        d.html('register success!');
+        $('body').append(d);
+        setTimeout("javascript:location.href='home.html'", 2000);
+    }
+</script>
+</html>
